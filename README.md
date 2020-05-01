@@ -11,11 +11,4 @@
 
 
 
-## React Library
-
-- [Ant Design](https://ant.design/)
-    - Alibabaが作っているCSSフレームワーク
-    - [人気](https://www.npmtrends.com/antd-vs-material-ui-vs-rebass-vs-semantic-ui-react-vs-uikit)っぽいので採用
-
-
 
