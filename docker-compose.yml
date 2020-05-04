@@ -5,10 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-        - ./app:/usr/src/app
+        - ./app:/usr/src/app:delegated
     ports:
         - 3000:3000
     command: sh -c "npm start"
     stdin_open: true
-    environment:
-        - NODE_ENV=production
+    env_file: .env
