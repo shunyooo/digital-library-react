@@ -2,6 +2,9 @@
   "name": "app",
   "version": "0.1.0",
   "description": "React App",
+  "license": "UNLICENSED",
+  "private": true,
+  "homepage": ".",
   "keywords": [
     "react",
     "webpack",
