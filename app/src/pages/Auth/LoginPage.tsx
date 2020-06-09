@@ -14,7 +14,8 @@ import Container from "@material-ui/core/Container";
 import { useAuthState } from "react-firebase-hooks/auth";
 import firebase from "../../plugins/firebase";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Paper } from "@material-ui/core";
+import { Box, Paper, LinearProgress } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,32 +36,43 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     textTransform: "none",
   },
+  progress: {
+    width: "100%",
+  },
 }));
 
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 
 const LoginPage: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
+
+  const updateSignUpState = async (): Promise<void> => {
+    setLoading(true);
+    const res = await firebase.auth().getRedirectResult();
+    console.log("getRedirectResult:", res);
+    setIsSignUp(Boolean(res.user));
+    setLoading(false);
+  };
 
   const init = async (): Promise<void> => {
-    console.log("init");
-    try {
-      const res = await firebase.auth().getRedirectResult();
-      console.log(res);
-    } catch (error) {
-      console.log(error);
+    await updateSignUpState();
+    if (isSignUp) {
+      history.push("/home");
     }
   };
 
   useEffect(() => {
     init();
-  });
+  }, [isSignUp]);
 
   const login = async (): Promise<void> => {
     console.log("login");
     try {
-      const res = firebase.auth().signInWithRedirect(googleAuthProvider);
-      console.log("firebase", res);
+      const res = await firebase.auth().signInWithRedirect(googleAuthProvider);
+      console.log("res", res);
     } catch (error) {
       console.log("error", error);
     }
@@ -77,6 +89,7 @@ const LoginPage: React.FC = () => {
     >
       <CssBaseline />
       <Grid item>
+        {loading && <LinearProgress className={classes.progress} />}
         <Paper className={classes.paper}>
           <Typography component="h1" variant="h2">
             InShelf
@@ -87,8 +100,9 @@ const LoginPage: React.FC = () => {
             color="primary"
             className={classes.submit}
             onClick={login}
+            disabled={loading}
           >
-            Google ログイン
+            {loading ? "認証情報を確認中..." : "Google ログイン"}
           </Button>
         </Paper>
       </Grid>

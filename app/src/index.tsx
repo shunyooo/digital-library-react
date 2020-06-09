@@ -11,6 +11,7 @@ import * as React from "react";
 import { SnackbarProvider } from "notistack";
 import firebase from "./plugins/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
+import HomePage from "./pages/Home/HomePage";
 
 const rootEl = document.getElementById("root");
 
@@ -39,9 +40,10 @@ render(
     <BrowserRouter>
       <Switch>
         <Route exact path="/">
-          <Redirect to={{ pathname: "/login" }} />
+          <Redirect to={{ pathname: "/home" }} />
         </Route>
-        <PrivateRoute path="/login" component={LoginPage} />
+        <Route path="/login" component={LoginPage} />
+        <PrivateRoute path="/home" component={HomePage} />
       </Switch>
     </BrowserRouter>
   </SnackbarProvider>,
