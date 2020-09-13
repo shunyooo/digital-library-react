@@ -15,22 +15,31 @@ import HomePage from "./pages/Home/HomePage";
 
 const rootEl = document.getElementById("root");
 
-const PrivateRoute: React.FC<RouteComponentProps> = ({ ...rest }) => {
+const PrivateRoute: React.FC<RouteComponentProps> = ({
+  component: Component,
+  ...rest
+}) => {
   const [user, loading, error] = useAuthState(firebase.auth());
   console.log(user, loading, error);
-  return user ? (
-    <Route {...rest} />
-  ) : (
+  console.log(user ? "login success" : "login failed");
+  if (loading) {
+    return <p>読み込み中...</p>;
+  }
+  return (
     <Route
       {...rest}
-      render={({ location }): React.ReactNode => (
-        <Redirect
-          to={{
-            pathname: "/login",
-            state: { from: location },
-          }}
-        />
-      )}
+      render={(props) =>
+        user ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location },
+            }}
+          />
+        )
+      }
     />
   );
 };
