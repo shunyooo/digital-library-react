@@ -1,5 +1,6 @@
 // production config
 const merge = require('webpack-merge');
+const webpack = require('webpack');
 const {resolve} = require('path');
 
 const commonConfig = require('./common');
@@ -13,5 +14,11 @@ module.exports = merge(commonConfig, {
     publicPath: '/',
   },
   devtool: 'source-map',
-  plugins: [],
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+          REACT_APP_TITLE: JSON.stringify('InShelf'),
+      }
+    }),
+  ],
 });

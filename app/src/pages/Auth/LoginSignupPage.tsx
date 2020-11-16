@@ -11,11 +11,13 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { useAuthState } from "react-firebase-hooks/auth";
-import firebase from "../../plugins/firebase";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Paper, LinearProgress } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
+import { googleLogin } from "../../plugins/Auth";
+import firebase from "../../plugins/firebase";
+import querystring from "querystring";
+import dataController from "../../plugins/DataController";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -41,11 +43,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-
-const LoginPage: React.FC = () => {
+const LoginSignupPage: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
+  const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
@@ -55,28 +56,33 @@ const LoginPage: React.FC = () => {
     console.log("getRedirectResult:", res);
     setIsSignUp(Boolean(res.user));
     setLoading(false);
+    if (res.user) {
+      await dataController.postUserIfNeed(res.user);
+    }
+  };
+
+  const getNext = (): string => {
+    const q = querystring.parse(location.search.replace("?", ""));
+    const next = q["next"];
+    return next as string;
   };
 
   const init = async (): Promise<void> => {
+    console.log(location);
     await updateSignUpState();
     if (isSignUp) {
-      history.push("/home");
+      const next = getNext();
+      if (next) {
+        history.push(`/${next}`);
+      } else {
+        history.push("/home");
+      }
     }
   };
 
   useEffect(() => {
     init();
   }, [isSignUp]);
-
-  const login = async (): Promise<void> => {
-    console.log("login");
-    try {
-      const res = await firebase.auth().signInWithRedirect(googleAuthProvider);
-      console.log("res", res);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
 
   return (
     <Grid
@@ -91,7 +97,7 @@ const LoginPage: React.FC = () => {
       <Grid item>
         {loading && <LinearProgress className={classes.progress} />}
         <Paper className={classes.paper}>
-          <Typography component="h1" variant="h2">
+          <Typography component="h1" variant="h4">
             InShelf
           </Typography>
           <Button
@@ -99,10 +105,10 @@ const LoginPage: React.FC = () => {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={login}
+            onClick={googleLogin}
             disabled={loading}
           >
-            {loading ? "認証情報を確認中..." : "Google ログイン"}
+            {loading ? "認証情報を確認中..." : `Google ログイン`}
           </Button>
         </Paper>
       </Grid>
@@ -110,4 +116,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default LoginSignupPage;

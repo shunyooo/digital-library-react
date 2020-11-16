@@ -22,7 +22,8 @@
     "rules": {
         "react/jsx-uses-vars": 1,
         "react/jsx-uses-react": [1],
-        "@typescript-eslint/no-var-requires": 0
+        "@typescript-eslint/no-var-requires": 0,
+        "@typescript-eslint/camelcase": ["warn", {"properties": "never"}]
     },
     "settings": {
         "import/resolver": "webpack"

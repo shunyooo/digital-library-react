@@ -16,10 +16,18 @@ module.exports = merge(commonConfig, {
     host: '0.0.0.0',
     disableHostCheck: true,
     historyApiFallback: true,
+    publicPath: '/',
   },
+  output: {
+    publicPath: '/',
+  }, 
   devtool: 'cheap-module-eval-source-map',
   plugins: [
     new webpack.HotModuleReplacementPlugin(), // enable HMR globally
-    new webpack.NamedModulesPlugin(), // prints more readable module names in the browser console on HMR updates
+    new webpack.DefinePlugin({
+      'process.env': {
+          REACT_APP_TITLE: JSON.stringify('Local InShelf'),
+      }
+    }),
   ],
 });

@@ -18,7 +18,7 @@
   "scripts": {
     "build": "yarn run clean-dist && webpack -p --config=configs/webpack/prod.js",
     "clean-dist": "rimraf dist/*",
-    "deploy": "yarn run build && firebase deploy",
+    "deploy": "yarn run build && firebase deploy --token $FIREBASE_TOKEN",
     "lint": "eslint './src/**/*.ts*'",
     "lint:fix": "eslint --fix './src/**/*.ts*'",
     "start": "yarn run start-dev",
@@ -63,15 +63,27 @@
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.10.3",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "@material-ui/core": "^4.9.13",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/data-grid": "^4.0.0-alpha.6",
     "@material-ui/icons": "^4.9.1",
-    "firebase": "^7.14.2",
+    "@material-ui/lab": "^4.0.0-alpha.56",
+    "bufferutil": "^4.0.1",
+    "canvas": "^2.6.1",
+    "copy-webpack-plugin": "^6.2.1",
+    "eslint-plugin-import": "^2.22.0",
+    "fibers": "^5.0.0",
+    "firebase": "^7.24.0",
+    "moment": "^2.29.1",
     "notistack": "^0.9.11",
-    "react-firebase-hooks": "^2.1.1",
-    "react-router-dom": "^5.1.2"
+    "react-data-grid": "^7.0.0-canary.15",
+    "react-firebase-hooks": "^2.2.0",
+    "react-router-dom": "^5.1.2",
+    "react-tinder-card": "git+https://github.com/CyberAgent/react-tinder-card.git",
+    "sass": "^1.26.11",
+    "utf-8-validate": "^5.0.2"
   }
 }

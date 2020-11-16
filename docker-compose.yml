@@ -9,6 +9,7 @@ services:
     ports:
         - ${REACT_APP_DEV_PORT}:${REACT_APP_DEV_PORT}
         - ${REACT_APP_PRD_PORT}:${REACT_APP_PRD_PORT}
-    command: sh -c "npm start"
+    command: sh -c "echo Run at http://localhost:${REACT_APP_DEV_PORT}/ && npm start"
+    # command: sh -c "yarn run start-prod"
     stdin_open: true
     env_file: .env
